@@ -70,6 +70,9 @@ public class SpoutWallet extends JavaPlugin {
         
         SpoutPlayer sPlayer = (SpoutPlayer) player;
         
+        if (!sPlayer.isSpoutCraftEnabled())
+            return; //Don't crash me bro!
+        
         UUID fundsLabelId = (UUID) getFundsLabels().get(player.getName());
         UUID rankLabelId = (UUID) getRankLabels().get(player.getName());
         

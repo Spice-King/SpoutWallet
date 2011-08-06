@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.spiceking.plugins.spoutwallet</groupId>
     <artifactId>SpoutWallet</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>SpoutWallet</name>
     <repositories>
         <repository>
