@@ -43,5 +43,10 @@
             <artifactId>spoutapi</artifactId>
             <version>dev-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>cosine</groupId>
+            <artifactId>boseconomy</artifactId>
+            <version>0.7.1</version>
+        </dependency>
     </dependencies>
 </project>

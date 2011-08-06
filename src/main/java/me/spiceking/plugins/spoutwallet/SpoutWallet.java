@@ -10,12 +10,19 @@ import org.bukkit.event.Event.Type;
 import com.iConomy.*;
 import com.iConomy.system.Account;
 import com.iConomy.system.Holdings;
+
+import cosine.boseconomy.BOSEconomy;
+
 import java.util.HashMap;
 import java.util.UUID;
+
+import me.spiceking.plugins.spoutwallet.listeners.BOSEListener;
 import me.spiceking.plugins.spoutwallet.listeners.SpoutCraftListener;
+
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.util.config.Configuration;
+
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -30,11 +37,13 @@ public class SpoutWallet extends JavaPlugin {
     public Integer ySetting;
     
     public iConomy iConomy = null;
+    public BOSEconomy BOSE = null;
     
     HashMap fundsLabels = new HashMap();
     HashMap rankLabels = new HashMap();
     
-    private final iConomyListener economyListener = new iConomyListener(this);
+    private final iConomyListener iConomyListener = new iConomyListener(this);
+    private final BOSEListener BOSEeconomyListener = new BOSEListener(this);
     
     public void onDisable() {
         System.out.println(this + " is now disabled!");
@@ -60,8 +69,10 @@ public class SpoutWallet extends JavaPlugin {
         config.save(); //Save the config!
         Logger log = getServer().getLogger();
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvent(Type.PLUGIN_ENABLE, economyListener, Priority.Monitor, this);
-        pm.registerEvent(Type.PLUGIN_DISABLE, economyListener, Priority.Monitor, this);
+        pm.registerEvent(Type.PLUGIN_ENABLE, iConomyListener, Priority.Monitor, this);
+        pm.registerEvent(Type.PLUGIN_DISABLE, iConomyListener, Priority.Monitor, this);
+        pm.registerEvent(Type.PLUGIN_ENABLE, BOSEeconomyListener, Priority.Monitor, this);
+        pm.registerEvent(Type.PLUGIN_DISABLE, BOSEeconomyListener, Priority.Monitor, this);
         pm.registerEvent(Type.CUSTOM_EVENT, new SpoutCraftListener(this), Priority.Low, this);
         System.out.println(this + " is now enabled!");
     }
@@ -77,7 +88,8 @@ public class SpoutWallet extends JavaPlugin {
     public void SetupScheduledTasks() {
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             public void run() {
-                onSecond();
+                if (BOSE != null ^ iConomy != null) // Should never use both at the same time
+                    onSecond();
             }
         }, 50, 20);
     }
@@ -107,17 +119,35 @@ public class SpoutWallet extends JavaPlugin {
         UUID rankLabelId = (UUID) getRankLabels().get(player.getName());
         rankLabel = (GenericLabel) sPlayer.getMainScreen().getWidget(rankLabelId);
         
+        String fundsText = null;
+        String rankText = null;
         if (iConomy != null){
             
             Holdings balance = iConomy.getAccount(player.getName()).getHoldings();
-            String fundsText = String.format(fundsString, balance.toString());
+            fundsText = String.format(fundsString, balance.toString());
             fundsLabel.setText(fundsText);
             fundsLabel.setDirty(true);
             
             if (showRank){
                 Account account = iConomy.getAccount(player.getName());
-                String rankText =  String.format(rankString, account.getRank());
+                rankText =  String.format(rankString, account.getRank());
                 rankLabel.setText(rankText);
+                rankLabel.setDirty(true);
+            }
+            return;
+        }
+        if (BOSE != null){
+            String balanceBOSE = BOSE.getPlayerMoneyDouble(player.getName()) + " " + BOSE.getMoneyNameCapsProper(BOSE.getPlayerMoneyDouble(player.getName()));
+            fundsText = String.format(fundsString, balanceBOSE);
+            
+            fundsLabel.setText(fundsText);
+            fundsLabel.setDirty(true);
+            
+            // For BOSE support of rank
+            if (showRank){
+                //Account account = iConomy.getAccount(player.getName());
+                //String rankText =  String.format(rankString, account.getRank());
+                rankLabel.setText("");
                 rankLabel.setDirty(true);
             }
             
@@ -125,7 +155,7 @@ public class SpoutWallet extends JavaPlugin {
             
         } else {
             
-            fundsLabel.setText("Looks like iConomy is not installed or not working");
+            fundsLabel.setText("Looks like a supported economy system is not installed or not working");
             fundsLabel.setDirty(true);
             if (showRank){
                 rankLabel.setText("");
