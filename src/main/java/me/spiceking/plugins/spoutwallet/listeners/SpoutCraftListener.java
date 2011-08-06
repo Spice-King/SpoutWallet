@@ -28,7 +28,7 @@ public class SpoutCraftListener extends SpoutListener {
         
         // Should not happen
         if(!event.getPlayer().isSpoutCraftEnabled()) {
-            event.getPlayer().sendMessage("This server uses SpoutCraft to display your balacne.");
+            event.getPlayer().sendMessage("This server uses SpoutCraft to display your balance.");
             event.getPlayer().sendMessage("Install SpoutCraft from http://goo.gl/UbjS1 to see it.");
             return;
         }
