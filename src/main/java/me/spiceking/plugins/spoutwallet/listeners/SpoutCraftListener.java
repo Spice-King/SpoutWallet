@@ -41,7 +41,7 @@ public class SpoutCraftListener extends SpoutListener {
         //This is the code to start the funds lable
         GenericLabel fundsLabel = new GenericLabel("");
         // Todo: fundsLable: config the location and colour
-        fundsLabel.setHexColor(Integer.parseInt("FFFFFF", 16)).setX(10).setY(20);
+        fundsLabel.setHexColor(Integer.parseInt("FFFFFF", 16)).setX(10).setY(plugin.ySetting);
         HashMap fundsLabels = plugin.getFundsLabels();
         fundsLabels.put(sp.getName(), fundsLabel.getId());
         sp.getMainScreen().attachWidget(fundsLabel);
@@ -50,7 +50,7 @@ public class SpoutCraftListener extends SpoutListener {
             //This is the code to start the rank lable
             GenericLabel rankLabel = new GenericLabel("");
             // Todo: rankLable: config the location and colour
-            rankLabel.setHexColor(Integer.parseInt("FFFFFF", 16)).setX(10).setY(30);
+            rankLabel.setHexColor(Integer.parseInt("FFFFFF", 16)).setX(10).setY(plugin.ySetting+10);
             HashMap rankLabels = plugin.getRankLabels();
             rankLabels.put(sp.getName(), rankLabel.getId());
             sp.getMainScreen().attachWidget(rankLabel);

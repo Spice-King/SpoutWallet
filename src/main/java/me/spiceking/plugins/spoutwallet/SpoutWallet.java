@@ -46,7 +46,17 @@ public class SpoutWallet extends JavaPlugin {
         fundsString = config.getString("Funds", "You have %s with you."); //String test = String.format("test goes here %s more text", "Testing");
         rankString = config.getString("Rank", "Your rank is: #%s");
         updateSpeed = config.getInt("UpdateSpeed", 20);
-        ySetting = config.getInt("Hight", 10);
+        ySetting = config.getInt("Height", 3);
+        
+        if (ySetting < 0){
+            ySetting = 3;
+            config.setProperty("Height", ySetting);
+        }
+        
+        if (updateSpeed < 20){
+            updateSpeed = 20;
+            config.setProperty("UpdateSpeed", updateSpeed);
+        }
         config.save(); //Save the config!
         Logger log = getServer().getLogger();
         PluginManager pm = getServer().getPluginManager();
