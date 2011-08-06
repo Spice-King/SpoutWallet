@@ -1,0 +1,9 @@
+author: Spice King
+database: false
+description: Provides a provides a display on the client of the current balance. Requires
+  Spout (formerly BukkitContrib) plugin and mod.
+generator: http://dinnerbone.com/minecraft/tools/pluginator/
+main: me.spiceking.plugins.spoutwallet.SpoutWallet
+name: SpoutWallet
+startup: postworld
+version: 1.0.0
