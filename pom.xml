@@ -48,5 +48,25 @@
             <artifactId>boseconomy</artifactId>
             <version>0.7.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.earth2me</groupId>
+            <artifactId>essentials</artifactId>
+            <version>Dev2.2.183</version>
+        </dependency>
+        <dependency>
+            <groupId>com.nijiko.coelho</groupId>
+            <artifactId>iConomy</artifactId>
+            <version>4.65</version>
+        </dependency>
+        <dependency>
+            <groupId>com</groupId>
+            <artifactId>iCo6</artifactId>
+            <version>6</version>
+        </dependency>
+        <dependency>
+            <groupId>me.ashtheking</groupId>
+            <artifactId>currency</artifactId>
+            <version>0.05</version>
+        </dependency>
     </dependencies>
 </project>
