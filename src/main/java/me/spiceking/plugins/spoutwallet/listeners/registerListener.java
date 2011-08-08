@@ -19,9 +19,7 @@ import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
 
 public class registerListener extends ServerListener {
-    // Change "MyPlugin" to the name of your MAIN class file.
-    // Let's say my plugins MAIN class is: MyPlugin.java
-    // I would change "MyPlugin" to "MyPlugin"
+    
     private SpoutWallet plugin;
     private Methods Methods = null;
 
@@ -38,6 +36,7 @@ public class registerListener extends ServerListener {
 
             if(check) {
                 this.plugin.Method = null;
+                this.plugin.iConomy = null;
                 System.out.println("[" + plugin.info.getName() + "] Payment method was disabled. No longer accepting payments.");
             }
         }
@@ -48,8 +47,6 @@ public class registerListener extends ServerListener {
         // Check to see if we need a payment method
         if (!this.Methods.hasMethod()) {
             if(this.Methods.setMethod(event.getPlugin())) {
-                // You might want to make this a public variable inside your MAIN class public Method Method = null;
-                // then reference it through this.plugin.Method so that way you can use it in the rest of your plugin ;)
                 this.plugin.Method = this.Methods.getMethod();
                 System.out.println("[" + plugin.info.getName() + "] Payment method found (" + this.plugin.Method.getName() + " version: " + this.plugin.Method.getVersion() + ")");
             }
