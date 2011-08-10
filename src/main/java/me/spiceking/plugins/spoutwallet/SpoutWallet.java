@@ -33,6 +33,7 @@ public class SpoutWallet extends JavaPlugin {
     public String rankString;
     public Integer updateSpeed;
     public Integer ySetting;
+    public Boolean ignoreEssentials;
     
     public PluginManager pluginManager = null;
     
@@ -62,6 +63,7 @@ public class SpoutWallet extends JavaPlugin {
         rankString = config.getString("Rank", "Your rank is: #%s");
         updateSpeed = config.getInt("UpdateSpeed", 20);
         ySetting = config.getInt("Height", 3);
+        ignoreEssentials = config.getBoolean("ignoreEssentials", false);
         
         if (ySetting < 0){
             ySetting = 3;

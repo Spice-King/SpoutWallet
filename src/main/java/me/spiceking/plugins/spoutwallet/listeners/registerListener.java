@@ -9,7 +9,7 @@ package me.spiceking.plugins.spoutwallet.listeners;
  * @author Kyle
  */
 
-// Imports for MyPlugin
+// Imports for SpoutWallet
 import me.spiceking.plugins.spoutwallet.payment.Methods;
 import me.spiceking.plugins.spoutwallet.SpoutWallet;
 
@@ -44,6 +44,11 @@ public class registerListener extends ServerListener {
 
     @Override
     public void onPluginEnable(PluginEnableEvent event) {
+        // Ignore Essentials if we want to!
+        if ("Essentials".equals(event.getPlugin().getDescription().getName()) && plugin.ignoreEssentials){
+            System.out.print("[" + plugin.getDescription().getName() + "] Almost loaded Essentials, but stopped because you want me to ignore Essentials!");
+            return;
+        }
         // Check to see if we need a payment method
         if (!this.Methods.hasMethod()) {
             if(this.Methods.setMethod(event.getPlugin())) {
