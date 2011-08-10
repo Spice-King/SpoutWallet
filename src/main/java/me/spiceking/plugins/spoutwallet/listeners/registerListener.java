@@ -37,7 +37,7 @@ public class registerListener extends ServerListener {
             if(check) {
                 this.plugin.Method = null;
                 this.plugin.iConomy = null;
-                System.out.println("[" + plugin.getDescription().getName() + "] Payment method was disabled. No longer accepting payments.");
+                System.out.println("[" + plugin.getDescription().getName() + "] Payment method was disabled. No longer showing balance.");
             }
         }
     }
