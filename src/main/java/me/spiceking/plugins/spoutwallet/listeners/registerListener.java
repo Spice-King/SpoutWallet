@@ -37,7 +37,7 @@ public class registerListener extends ServerListener {
             if(check) {
                 this.plugin.Method = null;
                 this.plugin.iConomy = null;
-                System.out.println("[" + plugin.info.getName() + "] Payment method was disabled. No longer accepting payments.");
+                System.out.println("[" + plugin.getDescription().getName() + "] Payment method was disabled. No longer accepting payments.");
             }
         }
     }
@@ -48,7 +48,7 @@ public class registerListener extends ServerListener {
         if (!this.Methods.hasMethod()) {
             if(this.Methods.setMethod(event.getPlugin())) {
                 this.plugin.Method = this.Methods.getMethod();
-                System.out.println("[" + plugin.info.getName() + "] Payment method found (" + this.plugin.Method.getName() + " version: " + this.plugin.Method.getVersion() + ")");
+                System.out.println("[" + plugin.getDescription().getName() + "] Payment method found (" + this.plugin.Method.getName() + " version: " + this.plugin.Method.getVersion() + ")");
             }
         }
     }

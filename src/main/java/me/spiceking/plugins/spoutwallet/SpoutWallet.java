@@ -18,7 +18,6 @@ import me.spiceking.plugins.spoutwallet.payment.Method;
 import me.spiceking.plugins.spoutwallet.payment.Method.MethodAccount;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.util.config.Configuration;
 
@@ -35,7 +34,6 @@ public class SpoutWallet extends JavaPlugin {
     public Integer updateSpeed;
     public Integer ySetting;
     
-    public PluginDescriptionFile info = null;
     public PluginManager pluginManager = null;
     
     public iConomy iConomy = null;
@@ -50,7 +48,6 @@ public class SpoutWallet extends JavaPlugin {
     
     public void onDisable() {
         // Clear economy stuff
-        info = null;
         Method = null;
         pluginManager = null;
         iConomy = null;
@@ -59,7 +56,6 @@ public class SpoutWallet extends JavaPlugin {
     }
 
     public void onEnable() {
-        info = getDescription();
         config = getConfiguration();
         showRank = config.getBoolean("ShowRank", true);
         fundsString = config.getString("Funds", "You have %s with you."); //String test = String.format("test goes here %s more text", "Testing");
