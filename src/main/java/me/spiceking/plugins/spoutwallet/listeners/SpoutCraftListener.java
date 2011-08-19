@@ -32,7 +32,6 @@ public class SpoutCraftListener extends SpoutListener {
             event.getPlayer().sendMessage("Install SpoutCraft from http://goo.gl/UbjS1 to see it.");
             return;
         }
-        
         drawGUI(event.getPlayer());
     }
 
@@ -55,5 +54,6 @@ public class SpoutCraftListener extends SpoutListener {
             rankLabels.put(sp.getName(), rankLabel.getId());
             sp.getMainScreen().attachWidget(rankLabel);
         }
+        plugin.setWallet(sp, true);
     }
 }
