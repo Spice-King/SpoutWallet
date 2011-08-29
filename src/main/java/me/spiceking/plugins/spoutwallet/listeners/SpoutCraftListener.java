@@ -9,6 +9,7 @@ import me.spiceking.plugins.spoutwallet.SpoutWallet;
 import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
 import org.getspout.spoutapi.event.spout.SpoutListener;
 import org.getspout.spoutapi.gui.GenericLabel;
+import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 /**
@@ -40,7 +41,7 @@ public class SpoutCraftListener extends SpoutListener {
         //This is the code to start the funds lable
         GenericLabel fundsLabel = new GenericLabel("");
         // Todo: fundsLable: config the location and colour
-        fundsLabel.setTextColor(plugin.colorFunds).setX(10).setY(plugin.ySetting);
+        fundsLabel.setTextColor(plugin.colorFunds).setX(10).setY(plugin.ySetting).setAnchor(WidgetAnchor.TOP_LEFT);
         HashMap fundsLabels = plugin.getFundsLabels();
         fundsLabels.put(sp.getName(), fundsLabel.getId());
         sp.getMainScreen().attachWidget(plugin, fundsLabel);
@@ -49,7 +50,7 @@ public class SpoutCraftListener extends SpoutListener {
             //This is the code to start the rank lable
             GenericLabel rankLabel = new GenericLabel("");
             // Todo: rankLable: config the location and colour
-            rankLabel.setTextColor(plugin.colorRank).setX(10).setY(plugin.ySetting+10);
+            rankLabel.setTextColor(plugin.colorRank).setX(10).setY(plugin.ySetting+10).setAnchor(WidgetAnchor.TOP_LEFT);
             HashMap rankLabels = plugin.getRankLabels();
             rankLabels.put(sp.getName(), rankLabel.getId());
             sp.getMainScreen().attachWidget(plugin, rankLabel);
