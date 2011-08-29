@@ -28,6 +28,8 @@ import org.bukkit.util.config.Configuration;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import org.getspout.spoutapi.gui.Color;
+
 public class SpoutWallet extends JavaPlugin {
     
     public Configuration config;
@@ -40,6 +42,19 @@ public class SpoutWallet extends JavaPlugin {
     public Integer updateSpeed;
     public Integer ySetting;
     public Boolean ignoreEssentials;
+    
+    public Integer colorFundsRed;
+    public Integer colorFundsBlue;
+    public Integer colorFundsGreen;
+        
+    public Integer colorRankRed;
+    public Integer colorRankBlue;
+    public Integer colorRankGreen;
+    
+    public Color colorFunds;
+    public Color colorRank;
+
+    
     
     public PluginManager pluginManager = null;
     
@@ -80,7 +95,44 @@ public class SpoutWallet extends JavaPlugin {
             updateSpeed = 20;
             config.setProperty("UpdateSpeed", updateSpeed);
         }
+        //Colors
+        colorFundsRed = config.getInt("color.funds.red", 255);
+        colorFundsBlue = config.getInt("color.funds.blue", 255);
+        colorFundsGreen = config.getInt("color.funds.green", 255);
+        
+        colorRankRed = config.getInt("color.rank.red", 255);
+        colorRankBlue = config.getInt("color.rank.blue", 255);
+        colorRankGreen = config.getInt("color.rank.green", 255);
+        
+        if ((colorFundsRed > 255) || (colorFundsRed <= -1)){
+            colorFundsRed = 255;
+            config.setProperty("color.funds.red", colorFundsRed);
+        }
+        if ((colorFundsBlue > 255) || (colorFundsBlue <= -1)){
+            colorFundsBlue = 255;
+            config.setProperty("color.funds.blue", colorFundsBlue);
+        }
+        if ((colorFundsGreen > 255) || (colorFundsGreen <= -1)){
+            colorFundsGreen = 255;
+            config.setProperty("color.funds.green", colorFundsGreen);
+        }
+        if ((colorRankRed > 255) || (colorRankRed <= -1)){
+            colorRankRed = 255;
+            config.setProperty("color.rank.red", colorRankRed);
+        }
+        if ((colorRankBlue > 255) || (colorRankBlue <= -1)){
+            colorRankBlue = 255;
+            config.setProperty("color.rank.blue", colorRankBlue);
+        }
+        if ((colorRankGreen > 255) || (colorRankGreen <= -1)){
+            colorRankGreen = 255;
+            config.setProperty("color.rank.green", colorRankGreen);
+        }
         config.save(); //Save the config!
+        // make the colors
+        colorFunds = new Color(new Float(colorFundsRed)/255, new Float(colorFundsGreen)/255, new Float(colorFundsBlue)/255);
+        colorRank = new Color(new Float(colorRankRed)/255, new Float(colorRankGreen)/255, new Float(colorRankBlue)/255);
+        
         Logger log = getServer().getLogger();
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvent(Type.PLUGIN_ENABLE, registerListener, Priority.Monitor, this);
