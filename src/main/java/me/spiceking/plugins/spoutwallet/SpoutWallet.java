@@ -6,6 +6,7 @@ import com.iConomy.system.Account;
 import java.util.logging.Logger;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ import org.bukkit.util.config.Configuration;
 
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.player.SpoutPlayer;
-
+import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.gui.Color;
 
 public class SpoutWallet extends JavaPlugin {
@@ -41,6 +42,7 @@ public class SpoutWallet extends JavaPlugin {
     public String rankString;
     public Integer updateSpeed;
     public Integer ySetting;
+    public Integer xSetting;
     public Boolean ignoreEssentials;
     
     public Integer colorFundsRed;
@@ -54,7 +56,7 @@ public class SpoutWallet extends JavaPlugin {
     public Color colorFunds;
     public Color colorRank;
 
-    
+    public WidgetAnchor location;
     
     public PluginManager pluginManager = null;
     
@@ -83,13 +85,9 @@ public class SpoutWallet extends JavaPlugin {
         fundsString = config.getString("Funds", "You have %s with you."); //String test = String.format("test goes here %s more text", "Testing");
         rankString = config.getString("Rank", "Your rank is: #%s");
         updateSpeed = config.getInt("UpdateSpeed", 20);
-        ySetting = config.getInt("Height", 3);
+        ySetting = config.getInt("yOffset", 3);
+        xSetting = config.getInt("xOffset", 3);
         ignoreEssentials = config.getBoolean("ignoreEssentials", false);
-        
-        if (ySetting < 0){
-            ySetting = 3;
-            config.setProperty("Height", ySetting);
-        }
         
         if (updateSpeed < 20){
             updateSpeed = 20;
@@ -127,6 +125,14 @@ public class SpoutWallet extends JavaPlugin {
         if ((colorRankGreen > 255) || (colorRankGreen <= -1)){
             colorRankGreen = 255;
             config.setProperty("color.rank.green", colorRankGreen);
+        }
+        try {
+            location = Enum.valueOf(WidgetAnchor.class, config.getString("location", "TOP_LEFT").toUpperCase(Locale.ENGLISH));
+        }
+        catch (java.lang.IllegalArgumentException e){
+            System.out.print("[SpoutWallet] Oops, the location you want to start from is not a location Spout knows about.");
+            System.out.print("[SpoutWallet] I'm going to change it back to TOP_LEFT");
+            config.setProperty("location", "TOP_LEFT");
         }
         config.save(); //Save the config!
         // make the colors
@@ -234,6 +240,11 @@ public class SpoutWallet extends JavaPlugin {
             MethodAccount balance = Method.getAccount(player.getName());
             fundsText = String.format(fundsString, Method.format(balance.balance()));
             fundsLabel.setText(fundsText);
+            if (location==WidgetAnchor.CENTER_CENTER || location==WidgetAnchor.BOTTOM_CENTER || location==WidgetAnchor.TOP_CENTER){
+                fundsLabel.setX(xSetting - (fundsLabel.getWidth()/2));
+            } else if (location==WidgetAnchor.BOTTOM_RIGHT || location==WidgetAnchor.CENTER_RIGHT || location==WidgetAnchor.TOP_RIGHT){
+                fundsLabel.setX(xSetting - fundsLabel.getWidth());
+            }
             fundsLabel.setDirty(true);
             
             if (showRank && ("iConomy".equals(Method.getName())) && ("5".equals(Method.getVersion()))){
@@ -241,12 +252,22 @@ public class SpoutWallet extends JavaPlugin {
                 Account account = iConomy.getAccount(player.getName());
                 rankText =  String.format(rankString, account.getRank());
                 rankLabel.setText(rankText);
+                if (location==WidgetAnchor.CENTER_CENTER || location==WidgetAnchor.BOTTOM_CENTER || location==WidgetAnchor.TOP_CENTER){
+
+                } else if (location==WidgetAnchor.BOTTOM_RIGHT || location==WidgetAnchor.CENTER_RIGHT || location==WidgetAnchor.TOP_RIGHT){
+                    
+                }
                 rankLabel.setDirty(true);
             }
             return;
         } else {
             
             fundsLabel.setText("Looks like a supported economy system is not installed or not working");
+            if (location==WidgetAnchor.CENTER_CENTER || location==WidgetAnchor.BOTTOM_CENTER || location==WidgetAnchor.TOP_CENTER){
+                fundsLabel.setX(xSetting - (fundsLabel.getWidth()/2));
+            } else if (location==WidgetAnchor.BOTTOM_RIGHT || location==WidgetAnchor.CENTER_RIGHT || location==WidgetAnchor.TOP_RIGHT){
+                fundsLabel.setX(xSetting - fundsLabel.getWidth());
+            }
             fundsLabel.setDirty(true);
             if (showRank){
                 rankLabel.setText("");

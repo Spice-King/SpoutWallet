@@ -20,8 +20,36 @@ public class SpoutCraftListener extends SpoutListener {
     
     SpoutWallet plugin;
     
+    public Integer fundsY;
+    public Integer rankY;
+    
     public SpoutCraftListener(SpoutWallet plugin) {
         this.plugin = plugin;
+        //Position offset for the new anchor system
+        switch(plugin.location) {
+            case TOP_LEFT:
+            case TOP_CENTER:
+            case TOP_RIGHT:
+                fundsY = 0;
+                rankY = plugin.ySetting + 10;
+                break;
+            case CENTER_LEFT:
+            case CENTER_CENTER:
+            case CENTER_RIGHT:
+                fundsY = plugin.ySetting - 5;
+                rankY = plugin.ySetting + 5;
+                break;
+            case BOTTOM_LEFT:
+            case BOTTOM_CENTER:
+            case BOTTOM_RIGHT:
+                fundsY = plugin.ySetting - 10;
+                rankY = plugin.ySetting;
+                break;
+            default:
+                System.out.print("[SpoutWallet] Somehow, I can't see the offset needed!");
+                plugin.location = WidgetAnchor.TOP_LEFT;
+                break;
+        }
     }
 
     @Override
@@ -41,7 +69,9 @@ public class SpoutCraftListener extends SpoutListener {
         //This is the code to start the funds lable
         GenericLabel fundsLabel = new GenericLabel("");
         // Todo: fundsLable: config the location and colour
-        fundsLabel.setTextColor(plugin.colorFunds).setX(10).setY(plugin.ySetting).setAnchor(WidgetAnchor.TOP_LEFT);
+        fundsLabel.setTextColor(plugin.colorFunds).setAnchor(plugin.location);
+        fundsLabel.setAlign(plugin.location);
+        fundsLabel.setX(plugin.xSetting).setY(fundsY);
         HashMap fundsLabels = plugin.getFundsLabels();
         fundsLabels.put(sp.getName(), fundsLabel.getId());
         sp.getMainScreen().attachWidget(plugin, fundsLabel);
@@ -50,7 +80,9 @@ public class SpoutCraftListener extends SpoutListener {
             //This is the code to start the rank lable
             GenericLabel rankLabel = new GenericLabel("");
             // Todo: rankLable: config the location and colour
-            rankLabel.setTextColor(plugin.colorRank).setX(10).setY(plugin.ySetting+10).setAnchor(WidgetAnchor.TOP_LEFT);
+            rankLabel.setTextColor(plugin.colorRank).setAnchor(plugin.location);
+            rankLabel.setAlign(plugin.location);
+            rankLabel.setX(plugin.xSetting).setY(rankY);
             HashMap rankLabels = plugin.getRankLabels();
             rankLabels.put(sp.getName(), rankLabel.getId());
             sp.getMainScreen().attachWidget(plugin, rankLabel);
