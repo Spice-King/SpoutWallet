@@ -65,7 +65,12 @@ public class SpoutCraftListener extends SpoutListener {
     }
 
     private void drawGUI(SpoutPlayer sp) {
-        
+        //Perms, yay!
+        if (sp.hasPermission("SpoutWallet.Use")){
+            plugin.setWallet(sp, true);
+        } else {
+            plugin.setWallet(sp, false);
+        }
         //This is the code to start the funds lable
         GenericLabel fundsLabel = new GenericLabel("");
         // Todo: fundsLable: config the location and colour

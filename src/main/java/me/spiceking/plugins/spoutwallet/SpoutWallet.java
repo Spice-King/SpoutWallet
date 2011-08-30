@@ -153,11 +153,15 @@ public class SpoutWallet extends JavaPlugin {
                 
                 if (cs instanceof Player) {
                     SpoutPlayer sPlayer = (SpoutPlayer)cs;
-                    if (sPlayer.isSpoutCraftEnabled()){
-                        setWallet(sPlayer, !walletOn(sPlayer));
+                    if (!cs.hasPermission("spoutwallet.toggle")){
+                        cs.sendMessage(ChatColor.RED + "You can't use this!");
                     } else {
-                        cs.sendMessage(ChatColor.RED + "You don't have SpoutCraft, so you can't use this command!");
-                        cs.sendMessage(ChatColor.RED + "Install SpoutCraft from http://goo.gl/UbjS1");
+                        if (sPlayer.isSpoutCraftEnabled()){
+                            setWallet(sPlayer, !walletOn(sPlayer));
+                        } else {
+                            cs.sendMessage(ChatColor.RED + "You don't have SpoutCraft, so you can't use this command!");
+                            cs.sendMessage(ChatColor.RED + "Install SpoutCraft from http://goo.gl/UbjS1");
+                        }
                     }
                 } else {
                     cs.sendMessage(ChatColor.RED + "You seem to be lacking a body to hold a wallet, so I can't tell you how full it is.");
@@ -225,8 +229,8 @@ public class SpoutWallet extends JavaPlugin {
         String fundsText = null;
         String rankText = null;
         
-        if (!walletOn(sPlayer)){
-            //wallet is off
+        if (!walletOn(sPlayer) || !sPlayer.hasPermission("spoutwallet.use")){
+            //wallet is off or not allowed
             fundsLabel.setText("");
             fundsLabel.setDirty(true);
             rankLabel.setText("");

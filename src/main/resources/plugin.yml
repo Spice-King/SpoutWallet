@@ -11,3 +11,16 @@ commands:
   wallet:
     description: Toggles the Spout-based display of the money they are holding
     usage: /<command>
+permissions:
+    SpoutWallet.*:
+        description: Users can see and toggle the display
+        default: true
+        children:
+            SpoutWallet.Use: true
+            SpoutWallet.Toggle: true
+    SpoutWallet.Use:
+        description: Users can see the display
+        default: true
+    SpoutWallet.Toggle:
+        description: Users can toggle the display
+        default: true
