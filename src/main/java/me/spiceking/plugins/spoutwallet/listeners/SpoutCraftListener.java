@@ -30,7 +30,7 @@ public class SpoutCraftListener extends SpoutListener {
             case TOP_LEFT:
             case TOP_CENTER:
             case TOP_RIGHT:
-                fundsY = 0;
+                fundsY = plugin.ySetting;
                 rankY = plugin.ySetting + 10;
                 break;
             case CENTER_LEFT:
