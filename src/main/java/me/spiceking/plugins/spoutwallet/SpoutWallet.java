@@ -133,6 +133,11 @@ public class SpoutWallet extends JavaPlugin {
             System.out.print("[SpoutWallet] Oops, the location you want to start from is not a location Spout knows about.");
             System.out.print("[SpoutWallet] I'm going to change it back to TOP_LEFT");
             config.setProperty("location", "TOP_LEFT");
+            try {
+                    location = WidgetAnchor.TOP_LEFT;
+            } catch (java.lang.IllegalArgumentException a){
+                    System.err.print("[SpoutWallet] Uh oh, Spout broke something! Tell Spice_King that WidgetAnchor enum has changed!");
+            }
         }
         config.save(); //Save the config!
         // make the colors

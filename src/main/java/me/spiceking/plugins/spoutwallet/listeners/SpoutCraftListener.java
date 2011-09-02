@@ -47,7 +47,11 @@ public class SpoutCraftListener extends SpoutListener {
                 break;
             default:
                 System.out.print("[SpoutWallet] Somehow, I can't see the offset needed!");
-                plugin.location = WidgetAnchor.TOP_LEFT;
+                try {
+                    plugin.location = WidgetAnchor.TOP_LEFT;
+                } catch (java.lang.IllegalArgumentException e){
+                    System.err.print("[SpoutWallet] Uh oh, Spout broke something! Tell Spice_King that WidgetAnchor enum has changed!");
+                }
                 break;
         }
     }
