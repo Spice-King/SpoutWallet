@@ -32,7 +32,7 @@ public class iCo6 implements Method {
     }
 
     public String format(double amount) {
-        return this.iConomy.format(amount);
+        return com.iCo6.iConomy.format(amount);
     }
 
     public boolean hasBanks() {
@@ -60,10 +60,9 @@ public class iCo6 implements Method {
     }
 
     public boolean isCompatible(Plugin plugin) {
-        try { Class.forName("com.iCo6.IO"); }
-        catch(Exception e) { return false; }
-
-        return plugin.getDescription().getName().equalsIgnoreCase("iconomy") && plugin.getClass().getName().equals("com.iCo6.iConomy") && plugin instanceof iConomy;
+        return plugin.getDescription().getName().equalsIgnoreCase("iconomy") 
+            && plugin.getClass().getName().equals("com.iCo6.iConomy")
+            && plugin instanceof iConomy;
     }
 
     public void setPlugin(Plugin plugin) {
