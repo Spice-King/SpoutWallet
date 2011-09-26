@@ -6,7 +6,8 @@ generator: http://dinnerbone.com/minecraft/tools/pluginator/
 main: me.spiceking.plugins.spoutwallet.SpoutWallet
 name: SpoutWallet
 startup: postworld
-version: 1.4.1
+depend: [Spout]
+version: 1.4.2
 commands:
   wallet:
     description: Toggles the Spout-based display of the money they are holding
