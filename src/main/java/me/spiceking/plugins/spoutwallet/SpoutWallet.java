@@ -92,7 +92,13 @@ public class SpoutWallet extends JavaPlugin {
         Method = null;
         pluginManager = null;
         iConomy = null;
+        // Clean up Spout widgets
         RemoveScheduledTasks();
+        for (Player player : getServer().getOnlinePlayers()) {
+            SpoutPlayer sp = (SpoutPlayer) player;
+            if (sp.isSpoutCraftEnabled())
+                sp.getMainScreen().removeWidgets(this);
+        }
         System.out.println(this + " is now disabled!");
     }
 
