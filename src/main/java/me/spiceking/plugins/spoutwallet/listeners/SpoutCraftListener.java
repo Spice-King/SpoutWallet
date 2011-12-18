@@ -94,6 +94,7 @@ public class SpoutCraftListener extends SpoutListener {
         fundsLabel.setTextColor(plugin.colorFunds).setAnchor(plugin.location);
         fundsLabel.setAlign(plugin.location);
         fundsLabel.setX(plugin.xSetting).setY(fundsY);
+        fundsLabel.setHeight(427).setWidth(240);
         HashMap fundsLabels = plugin.getFundsLabels();
         fundsLabels.put(sp.getName(), fundsLabel.getId());
         sp.getMainScreen().attachWidget(plugin, fundsLabel);
@@ -105,6 +106,7 @@ public class SpoutCraftListener extends SpoutListener {
             rankLabel.setTextColor(plugin.colorRank).setAnchor(plugin.location);
             rankLabel.setAlign(plugin.location);
             rankLabel.setX(plugin.xSetting).setY(rankY);
+            rankLabel.setHeight(427).setWidth(240);
             HashMap rankLabels = plugin.getRankLabels();
             rankLabels.put(sp.getName(), rankLabel.getId());
             sp.getMainScreen().attachWidget(plugin, rankLabel);
