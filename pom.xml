@@ -44,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>org.getspout</groupId>
-            <artifactId>spoutapi</artifactId>
+            <artifactId>spoutpluginapi</artifactId>
             <version>dev-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -70,7 +70,7 @@
         <dependency>
             <groupId>me.ashtheking</groupId>
             <artifactId>currency</artifactId>
-            <version>0.05</version>
+            <version>0.11</version>
         </dependency>
     </dependencies>
 </project>
