@@ -7,7 +7,7 @@ main: me.spiceking.plugins.spoutwallet.SpoutWallet
 name: SpoutWallet
 startup: postworld
 depend: [Spout]
-version: 1.4.3
+version: 1.4.3.1
 commands:
   wallet:
     description: Toggles the Spout-based display of the money they are holding
