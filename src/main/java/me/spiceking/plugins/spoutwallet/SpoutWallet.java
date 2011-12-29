@@ -277,6 +277,7 @@ public class SpoutWallet extends JavaPlugin {
             } else if (location==WidgetAnchor.BOTTOM_RIGHT || location==WidgetAnchor.CENTER_RIGHT || location==WidgetAnchor.TOP_RIGHT){
                 fundsLabel.setX(xSetting - fundsLabel.getWidth());
             }
+            fundsLabel.setWidth(fundsLabel.getMinWidth()).setHeight(fundsLabel.getMinHeight());
             fundsLabel.setDirty(true);
             
             if (showRank && ("iConomy".equals(Method.getName())) && ("5".equals(Method.getVersion()))){
@@ -289,6 +290,7 @@ public class SpoutWallet extends JavaPlugin {
                 } else if (location==WidgetAnchor.BOTTOM_RIGHT || location==WidgetAnchor.CENTER_RIGHT || location==WidgetAnchor.TOP_RIGHT){
                     
                 }
+                rankLabel.setWidth(rankLabel.getMinWidth()).setHeight(fundsLabel.getMinHeight());
                 rankLabel.setDirty(true);
             }
             return;
