@@ -272,11 +272,6 @@ public class SpoutWallet extends JavaPlugin {
             MethodAccount balance = Method.getAccount(player.getName());
             fundsText = String.format(fundsString, Method.format(balance.balance()));
             fundsLabel.setText(fundsText);
-            if (location==WidgetAnchor.CENTER_CENTER || location==WidgetAnchor.BOTTOM_CENTER || location==WidgetAnchor.TOP_CENTER){
-                fundsLabel.setX(xSetting - (fundsLabel.getWidth()/2));
-            } else if (location==WidgetAnchor.BOTTOM_RIGHT || location==WidgetAnchor.CENTER_RIGHT || location==WidgetAnchor.TOP_RIGHT){
-                fundsLabel.setX(xSetting - fundsLabel.getWidth());
-            }
             fundsLabel.setWidth(fundsLabel.getMinWidth()).setHeight(fundsLabel.getMinHeight());
             fundsLabel.setDirty(true);
             
@@ -285,11 +280,6 @@ public class SpoutWallet extends JavaPlugin {
                 Account account = iConomy.getAccount(player.getName());
                 rankText =  String.format(rankString, account.getRank());
                 rankLabel.setText(rankText);
-                if (location==WidgetAnchor.CENTER_CENTER || location==WidgetAnchor.BOTTOM_CENTER || location==WidgetAnchor.TOP_CENTER){
-
-                } else if (location==WidgetAnchor.BOTTOM_RIGHT || location==WidgetAnchor.CENTER_RIGHT || location==WidgetAnchor.TOP_RIGHT){
-                    
-                }
                 rankLabel.setWidth(rankLabel.getMinWidth()).setHeight(fundsLabel.getMinHeight());
                 rankLabel.setDirty(true);
             }
@@ -297,11 +287,6 @@ public class SpoutWallet extends JavaPlugin {
         } else {
             
             fundsLabel.setText("Looks like a supported economy system is not installed or not working");
-            if (location==WidgetAnchor.CENTER_CENTER || location==WidgetAnchor.BOTTOM_CENTER || location==WidgetAnchor.TOP_CENTER){
-                fundsLabel.setX(xSetting - (fundsLabel.getWidth()/2));
-            } else if (location==WidgetAnchor.BOTTOM_RIGHT || location==WidgetAnchor.CENTER_RIGHT || location==WidgetAnchor.TOP_RIGHT){
-                fundsLabel.setX(xSetting - fundsLabel.getWidth());
-            }
             fundsLabel.setDirty(true);
             if (showRank){
                 rankLabel.setText("");
