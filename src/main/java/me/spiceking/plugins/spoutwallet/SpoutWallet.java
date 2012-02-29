@@ -33,7 +33,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -47,17 +46,12 @@ public class SpoutWallet extends JavaPlugin {
     
     public static Economy economy = null;
     
-    public FileConfiguration config;
-    
     private Set<SpoutPlayer> wallets = new HashSet<SpoutPlayer>();
     
-    public Boolean showRank;
     public String fundsString;
-    public String rankString;
     public Integer updateSpeed;
     public Integer ySetting;
     public Integer xSetting;
-    public Boolean ignoreEssentials;
     
     public Integer colorFundsRed;
     public Integer colorFundsBlue;
@@ -93,41 +87,40 @@ public class SpoutWallet extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        config = getConfig();
-        fundsString = config.getString("Funds", "You have %s with you."); //String test = String.format("test goes here %s more text", "Testing");
-        updateSpeed = config.getInt("UpdateSpeed", 20);
-        ySetting = config.getInt("yOffset", 3);
-        xSetting = config.getInt("xOffset", 3);
-        ignoreEssentials = config.getBoolean("ignoreEssentials", false);
+        getConfig().options().copyDefaults(true);
+        fundsString = getConfig().getString("Funds"); //String test = String.format("test goes here %s more text", "Testing");
+        updateSpeed = getConfig().getInt("UpdateSpeed");
+        ySetting = getConfig().getInt("yOffset");
+        xSetting = getConfig().getInt("xOffset");
         
         if (updateSpeed < 20){
             updateSpeed = 20;
-            config.set("UpdateSpeed", updateSpeed);
+            getConfig().set("UpdateSpeed", updateSpeed);
         }
         //Colors
-        colorFundsRed = config.getInt("color.funds.red", 255);
-        colorFundsBlue = config.getInt("color.funds.blue", 255);
-        colorFundsGreen = config.getInt("color.funds.green", 255);
+        colorFundsRed = getConfig().getInt("color.funds.red");
+        colorFundsBlue = getConfig().getInt("color.funds.blue");
+        colorFundsGreen = getConfig().getInt("color.funds.green");
         
         if ((colorFundsRed > 255) || (colorFundsRed <= -1)){
             colorFundsRed = 255;
-            config.set("color.funds.red", colorFundsRed);
+            getConfig().set("color.funds.red", colorFundsRed);
         }
         if ((colorFundsBlue > 255) || (colorFundsBlue <= -1)){
             colorFundsBlue = 255;
-            config.set("color.funds.blue", colorFundsBlue);
+            getConfig().set("color.funds.blue", colorFundsBlue);
         }
         if ((colorFundsGreen > 255) || (colorFundsGreen <= -1)){
             colorFundsGreen = 255;
-            config.set("color.funds.green", colorFundsGreen);
+            getConfig().set("color.funds.green", colorFundsGreen);
         }
         try {
-            location = Enum.valueOf(WidgetAnchor.class, config.getString("location", "TOP_LEFT").toUpperCase(Locale.ENGLISH));
+            location = Enum.valueOf(WidgetAnchor.class, getConfig().getString("location", "TOP_LEFT").toUpperCase(Locale.ENGLISH));
         }
         catch (java.lang.IllegalArgumentException e){
             System.out.print("[SpoutWallet] Oops, the location you want to start from is not a location Spout knows about.");
             System.out.print("[SpoutWallet] I'm going to change it back to TOP_LEFT");
-            config.set("location", "TOP_LEFT");
+            getConfig().set("location", "TOP_LEFT");
             try {
                     location = WidgetAnchor.TOP_LEFT;
             } catch (java.lang.IllegalArgumentException a){

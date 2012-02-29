@@ -1,0 +1,14 @@
+UpdateSpeed: 20
+yOffset: 3
+xOffset: 3
+Funds: You have %s with you.
+location: TOP_RIGHT
+color:
+  rank:
+    red: 255
+    blue: 255
+    green: 255
+  funds:
+    red: 255
+    blue: 255
+    green: 255
