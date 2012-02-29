@@ -29,16 +29,14 @@ import me.spiceking.plugins.spoutwallet.listeners.SpoutCraftListener;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.util.config.Configuration;
 
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.player.SpoutPlayer;
@@ -49,7 +47,7 @@ public class SpoutWallet extends JavaPlugin {
     
     public static Economy economy = null;
     
-    public Configuration config;
+    public FileConfiguration config;
     
     private Set<SpoutPlayer> wallets = new HashSet<SpoutPlayer>();
     
@@ -80,6 +78,7 @@ public class SpoutWallet extends JavaPlugin {
     HashMap rankLabels = new HashMap();
     
     
+    @Override
     public void onDisable() {
         pluginManager = null;
         // Clean up Spout widgets
@@ -92,8 +91,9 @@ public class SpoutWallet extends JavaPlugin {
         System.out.println(this + " is now disabled!");
     }
 
+    @Override
     public void onEnable() {
-        config = getConfiguration();
+        config = getConfig();
         fundsString = config.getString("Funds", "You have %s with you."); //String test = String.format("test goes here %s more text", "Testing");
         updateSpeed = config.getInt("UpdateSpeed", 20);
         ySetting = config.getInt("yOffset", 3);
@@ -102,7 +102,7 @@ public class SpoutWallet extends JavaPlugin {
         
         if (updateSpeed < 20){
             updateSpeed = 20;
-            config.setProperty("UpdateSpeed", updateSpeed);
+            config.set("UpdateSpeed", updateSpeed);
         }
         //Colors
         colorFundsRed = config.getInt("color.funds.red", 255);
@@ -111,15 +111,15 @@ public class SpoutWallet extends JavaPlugin {
         
         if ((colorFundsRed > 255) || (colorFundsRed <= -1)){
             colorFundsRed = 255;
-            config.setProperty("color.funds.red", colorFundsRed);
+            config.set("color.funds.red", colorFundsRed);
         }
         if ((colorFundsBlue > 255) || (colorFundsBlue <= -1)){
             colorFundsBlue = 255;
-            config.setProperty("color.funds.blue", colorFundsBlue);
+            config.set("color.funds.blue", colorFundsBlue);
         }
         if ((colorFundsGreen > 255) || (colorFundsGreen <= -1)){
             colorFundsGreen = 255;
-            config.setProperty("color.funds.green", colorFundsGreen);
+            config.set("color.funds.green", colorFundsGreen);
         }
         try {
             location = Enum.valueOf(WidgetAnchor.class, config.getString("location", "TOP_LEFT").toUpperCase(Locale.ENGLISH));
@@ -127,20 +127,19 @@ public class SpoutWallet extends JavaPlugin {
         catch (java.lang.IllegalArgumentException e){
             System.out.print("[SpoutWallet] Oops, the location you want to start from is not a location Spout knows about.");
             System.out.print("[SpoutWallet] I'm going to change it back to TOP_LEFT");
-            config.setProperty("location", "TOP_LEFT");
+            config.set("location", "TOP_LEFT");
             try {
                     location = WidgetAnchor.TOP_LEFT;
             } catch (java.lang.IllegalArgumentException a){
                     System.err.print("[SpoutWallet] Uh oh, Spout broke something! Tell Spice_King that WidgetAnchor enum has changed!");
             }
         }
-        config.save(); //Save the config!
+        this.saveConfig(); //Save the config!
         // make the colors
         colorFunds = new Color(new Float(colorFundsRed)/255, new Float(colorFundsGreen)/255, new Float(colorFundsBlue)/255);
         
         Logger log = getServer().getLogger();
-        PluginManager pm = getServer().getPluginManager();
-        pm.registerEvent(Type.CUSTOM_EVENT, new SpoutCraftListener(this), Priority.Low, this);
+        getServer().getPluginManager().registerEvents(new SpoutCraftListener(this), this);
         SetupScheduledTasks();
         if (setupEconomy()){
             System.out.print("[SpoutWallet] Hooked Vault!");

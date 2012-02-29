@@ -19,8 +19,10 @@ package me.spiceking.plugins.spoutwallet.listeners;
 
 import java.util.HashMap;
 import me.spiceking.plugins.spoutwallet.SpoutWallet;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
-import org.getspout.spoutapi.event.spout.SpoutListener;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -28,7 +30,8 @@ import org.getspout.spoutapi.player.SpoutPlayer;
  *
  * @author Kyle
  */
-public class SpoutCraftListener extends SpoutListener {
+
+public class SpoutCraftListener implements Listener {
     
     SpoutWallet plugin;
     
@@ -66,8 +69,8 @@ public class SpoutCraftListener extends SpoutListener {
         }*/
     }
 
-    @Override
-    public void onSpoutCraftEnable(SpoutCraftEnableEvent event) {
+    @EventHandler(priority = EventPriority.LOW)
+    public void spoutEnable(SpoutCraftEnableEvent event) {
         
         // Should not happen
         if(!event.getPlayer().isSpoutCraftEnabled()) {
