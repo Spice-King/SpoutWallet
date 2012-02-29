@@ -17,9 +17,6 @@
 
 package me.spiceking.plugins.spoutwallet;
 
-import com.iConomy.*;
-import com.iConomy.system.Account;
-
 import java.util.logging.Logger;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,10 +24,9 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
-import me.spiceking.plugins.spoutwallet.listeners.registerListener;
 import me.spiceking.plugins.spoutwallet.listeners.SpoutCraftListener;
-import me.spiceking.plugins.spoutwallet.payment.Method;
-import me.spiceking.plugins.spoutwallet.payment.Method.MethodAccount;
+
+import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.event.Event.Priority;
@@ -41,6 +37,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.util.config.Configuration;
 
 import org.getspout.spoutapi.gui.GenericLabel;
@@ -49,6 +46,8 @@ import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.gui.Color;
 
 public class SpoutWallet extends JavaPlugin {
+    
+    public static Economy economy = null;
     
     public Configuration config;
     
@@ -77,21 +76,12 @@ public class SpoutWallet extends JavaPlugin {
     
     public PluginManager pluginManager = null;
     
-    public iConomy iConomy = null;
-
-    // This is public so we can
-    public Method Method = null;
-    
     HashMap fundsLabels = new HashMap();
     HashMap rankLabels = new HashMap();
     
-    private final registerListener registerListener = new registerListener(this);
     
     public void onDisable() {
-        // Clear economy stuff
-        Method = null;
         pluginManager = null;
-        iConomy = null;
         // Clean up Spout widgets
         RemoveScheduledTasks();
         for (Player player : getServer().getOnlinePlayers()) {
@@ -104,9 +94,7 @@ public class SpoutWallet extends JavaPlugin {
 
     public void onEnable() {
         config = getConfiguration();
-        showRank = config.getBoolean("ShowRank", true);
         fundsString = config.getString("Funds", "You have %s with you."); //String test = String.format("test goes here %s more text", "Testing");
-        rankString = config.getString("Rank", "Your rank is: #%s");
         updateSpeed = config.getInt("UpdateSpeed", 20);
         ySetting = config.getInt("yOffset", 3);
         xSetting = config.getInt("xOffset", 3);
@@ -121,10 +109,6 @@ public class SpoutWallet extends JavaPlugin {
         colorFundsBlue = config.getInt("color.funds.blue", 255);
         colorFundsGreen = config.getInt("color.funds.green", 255);
         
-        colorRankRed = config.getInt("color.rank.red", 255);
-        colorRankBlue = config.getInt("color.rank.blue", 255);
-        colorRankGreen = config.getInt("color.rank.green", 255);
-        
         if ((colorFundsRed > 255) || (colorFundsRed <= -1)){
             colorFundsRed = 255;
             config.setProperty("color.funds.red", colorFundsRed);
@@ -136,18 +120,6 @@ public class SpoutWallet extends JavaPlugin {
         if ((colorFundsGreen > 255) || (colorFundsGreen <= -1)){
             colorFundsGreen = 255;
             config.setProperty("color.funds.green", colorFundsGreen);
-        }
-        if ((colorRankRed > 255) || (colorRankRed <= -1)){
-            colorRankRed = 255;
-            config.setProperty("color.rank.red", colorRankRed);
-        }
-        if ((colorRankBlue > 255) || (colorRankBlue <= -1)){
-            colorRankBlue = 255;
-            config.setProperty("color.rank.blue", colorRankBlue);
-        }
-        if ((colorRankGreen > 255) || (colorRankGreen <= -1)){
-            colorRankGreen = 255;
-            config.setProperty("color.rank.green", colorRankGreen);
         }
         try {
             location = Enum.valueOf(WidgetAnchor.class, config.getString("location", "TOP_LEFT").toUpperCase(Locale.ENGLISH));
@@ -165,14 +137,16 @@ public class SpoutWallet extends JavaPlugin {
         config.save(); //Save the config!
         // make the colors
         colorFunds = new Color(new Float(colorFundsRed)/255, new Float(colorFundsGreen)/255, new Float(colorFundsBlue)/255);
-        colorRank = new Color(new Float(colorRankRed)/255, new Float(colorRankGreen)/255, new Float(colorRankBlue)/255);
         
         Logger log = getServer().getLogger();
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvent(Type.PLUGIN_ENABLE, registerListener, Priority.Monitor, this);
-        pm.registerEvent(Type.PLUGIN_DISABLE, registerListener, Priority.Monitor, this);
         pm.registerEvent(Type.CUSTOM_EVENT, new SpoutCraftListener(this), Priority.Low, this);
         SetupScheduledTasks();
+        if (setupEconomy()){
+            System.out.print("[SpoutWallet] Hooked Vault!");
+        } else {
+            System.out.print("[SpoutWallet] Oh this is bad. Vault has no economy for me!");
+        }
         getCommand("wallet").setExecutor(new CommandExecutor() {
             public boolean onCommand(CommandSender cs, Command cmnd, String alias, String[] args) {
                 if (args.length > 0) {
@@ -198,7 +172,7 @@ public class SpoutWallet extends JavaPlugin {
                 return true;
             }
         });
-        System.out.println(this + " is now enabled!");
+        System.out.println("[SpoutWallet] is now enabled!");
     }
     
     public boolean walletOn(SpoutPlayer sPlayer) {
@@ -215,10 +189,6 @@ public class SpoutWallet extends JavaPlugin {
     
     public HashMap getFundsLabels(){
         return fundsLabels;
-    }
-    
-    public HashMap getRankLabels(){
-        return rankLabels;
     }
     
     public void SetupScheduledTasks() {
@@ -250,49 +220,39 @@ public class SpoutWallet extends JavaPlugin {
         UUID fundsLabelId = (UUID) getFundsLabels().get(player.getName());
         GenericLabel fundsLabel = (GenericLabel) sPlayer.getMainScreen().getWidget(fundsLabelId);
         
-        GenericLabel rankLabel = null;
-        UUID rankLabelId = (UUID) getRankLabels().get(player.getName());
-        rankLabel = (GenericLabel) sPlayer.getMainScreen().getWidget(rankLabelId);
-        
         String fundsText = null;
-        String rankText = null;
         
         if (!walletOn(sPlayer) || !sPlayer.hasPermission("spoutwallet.use")){
             //wallet is off or not allowed
             fundsLabel.setText("");
             fundsLabel.setDirty(true);
-            rankLabel.setText("");
-            rankLabel.setDirty(true);
             return;
         }
         
-        if (Method != null){
-            if (!Method.hasAccount(player.getName()))
-                return;
-            MethodAccount balance = Method.getAccount(player.getName());
-            fundsText = String.format(fundsString, Method.format(balance.balance()));
+        if (economy != null){
+            /*if (!economy.hasAccount(player.getName()))
+                return;*/
+            /*System.out.print(economy.getBalance(player.getName()));
+            System.out.print(economy.format(economy.getBalance(player.getName())));*/
+            fundsText = String.format(fundsString, economy.format(economy.getBalance(player.getName())));
             fundsLabel.setText(fundsText);
             fundsLabel.setWidth(fundsLabel.getMinWidth()).setHeight(fundsLabel.getMinHeight());
             fundsLabel.setDirty(true);
-            
-            if (showRank && ("iConomy".equals(Method.getName())) && ("5".equals(Method.getVersion()))){
-                iConomy = (iConomy) Method.getPlugin();
-                Account account = iConomy.getAccount(player.getName());
-                rankText =  String.format(rankString, account.getRank());
-                rankLabel.setText(rankText);
-                rankLabel.setWidth(rankLabel.getMinWidth()).setHeight(fundsLabel.getMinHeight());
-                rankLabel.setDirty(true);
-            }
             return;
         } else {
             
             fundsLabel.setText("Looks like a supported economy system is not installed or not working");
             fundsLabel.setDirty(true);
-            if (showRank){
-                rankLabel.setText("");
-                rankLabel.setDirty(true);
-            }
             return;
         }
+    }
+    
+    private Boolean setupEconomy(){
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        if (economyProvider != null) {
+            economy = economyProvider.getProvider();
+        }
+        
+        return (economy != null);
     }
 }

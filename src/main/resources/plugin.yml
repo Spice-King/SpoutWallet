@@ -6,7 +6,7 @@ generator: http://dinnerbone.com/minecraft/tools/pluginator/
 main: me.spiceking.plugins.spoutwallet.SpoutWallet
 name: SpoutWallet
 startup: postworld
-depend: [Spout]
+depend: [Spout, Vault]
 version: 1.4.3.1
 commands:
   wallet:

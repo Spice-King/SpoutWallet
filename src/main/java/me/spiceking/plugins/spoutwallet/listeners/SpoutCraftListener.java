@@ -22,7 +22,6 @@ import me.spiceking.plugins.spoutwallet.SpoutWallet;
 import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
 import org.getspout.spoutapi.event.spout.SpoutListener;
 import org.getspout.spoutapi.gui.GenericLabel;
-import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 /**
@@ -33,13 +32,11 @@ public class SpoutCraftListener extends SpoutListener {
     
     SpoutWallet plugin;
     
-    public Integer fundsY;
-    public Integer rankY;
     
     public SpoutCraftListener(SpoutWallet plugin) {
         this.plugin = plugin;
         //Position offset for the new anchor system
-        switch(plugin.location) {
+        /*switch(plugin.location) {
             case TOP_LEFT:
             case TOP_CENTER:
             case TOP_RIGHT:
@@ -66,7 +63,7 @@ public class SpoutCraftListener extends SpoutListener {
                     System.err.print("[SpoutWallet] Uh oh, Spout broke something! Tell Spice_King that WidgetAnchor enum has changed!");
                 }
                 break;
-        }
+        }*/
     }
 
     @Override
@@ -93,24 +90,12 @@ public class SpoutCraftListener extends SpoutListener {
         // Todo: fundsLable: config the location and colour
         fundsLabel.setTextColor(plugin.colorFunds).setAnchor(plugin.location);
         fundsLabel.setAlign(plugin.location);
-        fundsLabel.setX(plugin.xSetting).setY(fundsY);
+        fundsLabel.setX(plugin.xSetting).setY(plugin.ySetting);
         fundsLabel.setHeight(0).setWidth(0);
         HashMap fundsLabels = plugin.getFundsLabels();
         fundsLabels.put(sp.getName(), fundsLabel.getId());
         sp.getMainScreen().attachWidget(plugin, fundsLabel);
         
-        if (plugin.showRank){
-            //This is the code to start the rank lable
-            GenericLabel rankLabel = new GenericLabel("");
-            // Todo: rankLable: config the location and colour
-            rankLabel.setTextColor(plugin.colorRank).setAnchor(plugin.location);
-            rankLabel.setAlign(plugin.location);
-            rankLabel.setX(plugin.xSetting).setY(rankY);
-            rankLabel.setHeight(0).setWidth(0);
-            HashMap rankLabels = plugin.getRankLabels();
-            rankLabels.put(sp.getName(), rankLabel.getId());
-            sp.getMainScreen().attachWidget(plugin, rankLabel);
-        }
         plugin.setWallet(sp, true);
     }
 }
