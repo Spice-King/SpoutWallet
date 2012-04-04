@@ -81,7 +81,7 @@ public class SpoutCraftListener implements Listener {
         drawGUI(event.getPlayer());
     }
 
-    private void drawGUI(SpoutPlayer sp) {
+    public void drawGUI(SpoutPlayer sp) {
         //Perms, yay!
         if (sp.hasPermission("SpoutWallet.Use")){
             plugin.setWallet(sp, true);

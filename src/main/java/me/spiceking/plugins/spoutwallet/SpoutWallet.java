@@ -46,7 +46,7 @@ public class SpoutWallet extends JavaPlugin {
     
     public static Economy economy = null;
     
-    private Set<SpoutPlayer> wallets = new HashSet<SpoutPlayer>();
+    private Set<SpoutPlayer> wallets;
     
     public String fundsString;
     public Integer updateSpeed;
@@ -69,8 +69,8 @@ public class SpoutWallet extends JavaPlugin {
     public PluginManager pluginManager = null;
     
     HashMap fundsLabels = new HashMap();
-    HashMap rankLabels = new HashMap();
     
+    SpoutCraftListener spoutCraftListener = new SpoutCraftListener(this);
     
     @Override
     public void onDisable() {
@@ -87,6 +87,9 @@ public class SpoutWallet extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Empty HashMap and HashSet
+        fundsLabels = new HashMap();
+        wallets = new HashSet<SpoutPlayer>();
         getConfig().options().copyDefaults(true);
         fundsString = getConfig().getString("Funds"); //String test = String.format("test goes here %s more text", "Testing");
         updateSpeed = getConfig().getInt("UpdateSpeed");
@@ -132,7 +135,7 @@ public class SpoutWallet extends JavaPlugin {
         colorFunds = new Color(new Float(colorFundsRed)/255, new Float(colorFundsGreen)/255, new Float(colorFundsBlue)/255);
         
         Logger log = getServer().getLogger();
-        getServer().getPluginManager().registerEvents(new SpoutCraftListener(this), this);
+        getServer().getPluginManager().registerEvents(spoutCraftListener, this);
         SetupScheduledTasks();
         if (setupEconomy()){
             System.out.print("[SpoutWallet] Hooked Vault!");
@@ -211,6 +214,12 @@ public class SpoutWallet extends JavaPlugin {
         
         UUID fundsLabelId = (UUID) getFundsLabels().get(player.getName());
         GenericLabel fundsLabel = (GenericLabel) sPlayer.getMainScreen().getWidget(fundsLabelId);
+        
+        // Make sure the player has his/her own label
+        if (fundsLabelId == null || fundsLabel == null){
+            spoutCraftListener.drawGUI(sPlayer);
+            return;  //Don't crash me bro! v.2.0
+        }
         
         String fundsText = null;
         
