@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.spiceking.plugins.spoutwallet</groupId>
     <artifactId>SpoutWallet</artifactId>
-    <version>1.4.4.2</version>
+    <version>1.4.4.3-SNAPSHOT</version>
     <name>SpoutWallet</name>
     <scm>
         <connection>scm:git:http://github.com/Spice-King/SpoutWallet.git</connection>
