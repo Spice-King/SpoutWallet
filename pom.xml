@@ -2,8 +2,22 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.spiceking.plugins.spoutwallet</groupId>
     <artifactId>SpoutWallet</artifactId>
-    <version>1.4.4.2</version>
+    <version>1.4.4.2-SNAPSHOT</version>
     <name>SpoutWallet</name>
+    <scm>
+        <connection>scm:git:http://github.com/Spice-King/SpoutWallet.git</connection>
+        <developerConnection>scm:git:git@github.com:Spice-King/SpoutWallet.git</developerConnection>
+    </scm>
+    <distributionManagement>
+        <repository>
+            <id>repo</id>
+            <url>file:${project.basedir}/../mavenrepository/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshot-repo</id>
+            <url>file:${project.basedir}/../mavenrepository/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
     <repositories>
         <repository>
             <id>bukkit-repo</id>
@@ -28,6 +42,29 @@
                     <source>1.5</source>
                     <target>1.5</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.2.2</version>
+                <configuration>
+                    <goal>deploy</goal>
+                    <workingDirectory>${project.basedir}/../temp</workingDirectory>
+                    <checkModificationExcludes>
+                        <checkModificationExclude>pom.xml</checkModificationExclude>
+                    </checkModificationExcludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>perform</goal>
+                        </goals>
+                        <configuration>
+                            <pomFileName>pom.xml</pomFileName>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>pl.project13.maven</groupId>
@@ -66,7 +103,7 @@
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
-            <version>1.2.14-SNAPSHOT</version>
+            <version>1.2.16-SNAPSHOT</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>

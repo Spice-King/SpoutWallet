@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>build</actionName>
+            <goals>
+                <goal>release:perform</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>rebuild</actionName>
+            <goals>
+                <goal>release:prepare</goal>
+            </goals>
+            <properties>
+                <ignoreSnapshots>true</ignoreSnapshots>
+            </properties>
+        </action>
+    </actions>
