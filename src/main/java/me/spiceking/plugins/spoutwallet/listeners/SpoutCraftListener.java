@@ -35,7 +35,6 @@ public class SpoutCraftListener implements Listener {
     
     SpoutWallet plugin;
     
-    
     public SpoutCraftListener(SpoutWallet plugin) {
         this.plugin = plugin;
         //Position offset for the new anchor system
