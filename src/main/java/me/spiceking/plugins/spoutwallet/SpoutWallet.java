@@ -41,6 +41,7 @@ import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.gui.Color;
+import org.getspout.spoutapi.gui.Screen;
 
 public class SpoutWallet extends JavaPlugin {
     
@@ -255,5 +256,25 @@ public class SpoutWallet extends JavaPlugin {
         }
         
         return (economy != null);
+    }
+    
+    public void drawGUI(SpoutPlayer sp, Screen screen) {
+        //Perms, yay!
+        if (sp.hasPermission("SpoutWallet.Use")){
+            setWallet(sp, true);
+        } else {
+            setWallet(sp, false);
+        }
+        //This is the code to start the funds lable
+        GenericLabel fundsLabel = new GenericLabel("");
+        // Todo: fundsLable: config the location and colour
+        fundsLabel.setTextColor(colorFunds).setAnchor(location);
+        fundsLabel.setAlign(location);
+        fundsLabel.setX(xSetting).setY(ySetting);
+        fundsLabel.setHeight(0).setWidth(0);
+        fundsLabels.put(sp.getName(), fundsLabel.getId());
+        screen.attachWidget(this, fundsLabel);
+        
+        setWallet(sp, true);
     }
 }

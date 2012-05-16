@@ -77,27 +77,7 @@ public class SpoutCraftListener implements Listener {
             event.getPlayer().sendMessage("Install SpoutCraft from http://goo.gl/UbjS1 to see it.");
             return;
         }
-        drawGUI(event.getPlayer());
+        plugin.drawGUI(event.getPlayer(), event.getPlayer().getMainScreen());
     }
 
-    public void drawGUI(SpoutPlayer sp) {
-        //Perms, yay!
-        if (sp.hasPermission("SpoutWallet.Use")){
-            plugin.setWallet(sp, true);
-        } else {
-            plugin.setWallet(sp, false);
-        }
-        //This is the code to start the funds lable
-        GenericLabel fundsLabel = new GenericLabel("");
-        // Todo: fundsLable: config the location and colour
-        fundsLabel.setTextColor(plugin.colorFunds).setAnchor(plugin.location);
-        fundsLabel.setAlign(plugin.location);
-        fundsLabel.setX(plugin.xSetting).setY(plugin.ySetting);
-        fundsLabel.setHeight(0).setWidth(0);
-        HashMap fundsLabels = plugin.getFundsLabels();
-        fundsLabels.put(sp.getName(), fundsLabel.getId());
-        sp.getMainScreen().attachWidget(plugin, fundsLabel);
-        
-        plugin.setWallet(sp, true);
-    }
 }
