@@ -15,7 +15,7 @@
  * along with SpoutWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.spiceking.plugins.spoutwallet;
+package com.github.spice_king.bukkit.spoutwallet;
 
 import java.util.logging.Logger;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
-import me.spiceking.plugins.spoutwallet.listeners.SpoutCraftListener;
+import com.github.spice_king.bukkit.spoutwallet.listeners.SpoutCraftListener;
 
 import net.milkbowl.vault.economy.Economy;
 

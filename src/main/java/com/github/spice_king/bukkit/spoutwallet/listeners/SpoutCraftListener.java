@@ -15,10 +15,10 @@
  * along with SpoutWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.spiceking.plugins.spoutwallet.listeners;
+package com.github.spice_king.bukkit.spoutwallet.listeners;
 
 import java.util.HashMap;
-import me.spiceking.plugins.spoutwallet.SpoutWallet;
+import com.github.spice_king.bukkit.spoutwallet.SpoutWallet;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
