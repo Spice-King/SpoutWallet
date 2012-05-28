@@ -218,7 +218,7 @@ public class SpoutWallet extends JavaPlugin {
         
         // Make sure the player has his/her own label
         if (fundsLabelId == null || fundsLabel == null){
-            spoutCraftListener.drawGUI(sPlayer);
+            drawGUI(sPlayer, sPlayer.getMainScreen());
             return;  //Don't crash me bro! v.2.0
         }
         
