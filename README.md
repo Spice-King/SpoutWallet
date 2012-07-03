@@ -6,7 +6,7 @@ Player need to be using [SpoutCraft] to see their balance.
 Source
 ------
 The source can be found on [GitHub].  
-Download the latest builds from [Travis].  [![Build Status] [Travis-Status] [Travis] ]
+Download the latest builds from [Travis].  [![Build Status] [Travis-Status] ] [Travis]
 
 License
 -------
