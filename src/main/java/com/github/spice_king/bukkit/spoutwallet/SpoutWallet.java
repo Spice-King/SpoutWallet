@@ -17,18 +17,13 @@
 
 package com.github.spice_king.bukkit.spoutwallet;
 
-import java.util.logging.Logger;
+import com.github.spice_king.bukkit.spoutwallet.listeners.SpoutCraftListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-import java.util.UUID;
-
-import com.github.spice_king.bukkit.spoutwallet.listeners.SpoutCraftListener;
-
+import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,12 +31,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
-
-import org.getspout.spoutapi.gui.GenericLabel;
-import org.getspout.spoutapi.player.SpoutPlayer;
-import org.getspout.spoutapi.gui.WidgetAnchor;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.getspout.spoutapi.gui.Color;
-import org.getspout.spoutapi.gui.Screen;
+import org.getspout.spoutapi.gui.WidgetAnchor;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class SpoutWallet extends JavaPlugin {
     
@@ -80,8 +73,9 @@ public class SpoutWallet extends JavaPlugin {
         RemoveScheduledTasks();
         for (Player player : getServer().getOnlinePlayers()) {
             SpoutPlayer sp = (SpoutPlayer) player;
-            if (sp.isSpoutCraftEnabled())
+            if (sp.isSpoutCraftEnabled()) {
                 sp.getMainScreen().removeWidgets(this);
+            }
         }
         System.out.println(this + " is now disabled!");
     }
@@ -188,65 +182,11 @@ public class SpoutWallet extends JavaPlugin {
     }
     
     public void SetupScheduledTasks() {
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-            public void run() {
-                onSecond();
-            }
-        }, 50, 20);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new PlayerUpdateTask(this), 50, 20);
     }
     
     public void RemoveScheduledTasks(){
         getServer().getScheduler().cancelTasks(this);
-    }
-    
-    private void onSecond() {
-        Player[] players = getServer().getOnlinePlayers();
-        for (Player player : players){
-            updateGUI(player);
-            }
-    }
-    
-    private void updateGUI(Player player) {
-        
-        SpoutPlayer sPlayer = (SpoutPlayer) player;
-        
-        if (!sPlayer.isSpoutCraftEnabled())
-            return; //Don't crash me bro!
-        
-        UUID fundsLabelId = (UUID) getFundsLabels().get(player.getName());
-        GenericLabel fundsLabel = (GenericLabel) sPlayer.getMainScreen().getWidget(fundsLabelId);
-        
-        // Make sure the player has his/her own label
-        if (fundsLabelId == null || fundsLabel == null){
-            drawGUI(sPlayer, sPlayer.getMainScreen());
-            return;  //Don't crash me bro! v.2.0
-        }
-        
-        String fundsText = null;
-        
-        if (!walletOn(sPlayer) || !sPlayer.hasPermission("spoutwallet.use")){
-            //wallet is off or not allowed
-            fundsLabel.setText("");
-            fundsLabel.setDirty(true);
-            return;
-        }
-        
-        if (economy != null){
-            /*if (!economy.hasAccount(player.getName()))
-                return;*/
-            /*System.out.print(economy.getBalance(player.getName()));
-            System.out.print(economy.format(economy.getBalance(player.getName())));*/
-            fundsText = String.format(fundsString, economy.format(economy.getBalance(player.getName())));
-            fundsLabel.setText(fundsText);
-            fundsLabel.setWidth(fundsLabel.getMinWidth()).setHeight(fundsLabel.getMinHeight());
-            fundsLabel.setDirty(true);
-            return;
-        } else {
-            
-            fundsLabel.setText("Looks like a supported economy system is not installed or not working");
-            fundsLabel.setDirty(true);
-            return;
-        }
     }
     
     private Boolean setupEconomy(){
@@ -258,23 +198,5 @@ public class SpoutWallet extends JavaPlugin {
         return (economy != null);
     }
     
-    public void drawGUI(SpoutPlayer sp, Screen screen) {
-        //Perms, yay!
-        if (sp.hasPermission("SpoutWallet.Use")){
-            setWallet(sp, true);
-        } else {
-            setWallet(sp, false);
-        }
-        //This is the code to start the funds lable
-        GenericLabel fundsLabel = new GenericLabel("");
-        // Todo: fundsLable: config the location and colour
-        fundsLabel.setTextColor(colorFunds).setAnchor(location);
-        fundsLabel.setAlign(location);
-        fundsLabel.setX(xSetting).setY(ySetting);
-        fundsLabel.setHeight(0).setWidth(0);
-        fundsLabels.put(sp.getName(), fundsLabel.getId());
-        screen.attachWidget(this, fundsLabel);
-        
-        setWallet(sp, true);
-    }
+
 }
