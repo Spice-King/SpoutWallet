@@ -54,6 +54,7 @@
                     <checkModificationExcludes>
                         <checkModificationExclude>pom.xml</checkModificationExclude>
                     </checkModificationExcludes>
+                    <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
                 </configuration>
                 <executions>
                     <execution>
