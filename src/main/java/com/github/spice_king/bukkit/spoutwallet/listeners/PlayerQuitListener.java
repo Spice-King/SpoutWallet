@@ -16,14 +16,22 @@
  */
 package com.github.spice_king.bukkit.spoutwallet.listeners;
 
+import com.github.spice_king.bukkit.spoutwallet.SpoutWallet;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class PlayerQuitListener implements Listener{
-    @EventHandler(priority=EventPriority.MONITOR)
-    void onPlayerQuit(PlayerQuitEvent event){
-        
+public class PlayerQuitListener implements Listener {
+
+    private SpoutWallet plugin;
+
+    public PlayerQuitListener(SpoutWallet plugin) {
+        this.plugin = plugin;
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    void onPlayerQuit(PlayerQuitEvent event) {
+        plugin.removePlayerUpdateTask(event.getPlayer().getName());
     }
 }

@@ -16,6 +16,7 @@
  */
 package com.github.spice_king.bukkit.spoutwallet;
 
+import java.util.logging.Level;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.player.SpoutPlayer;
@@ -37,7 +38,7 @@ public class PlayerUpdateTask implements Runnable {
     }
 
     private void updateGUI(SpoutPlayer player) {
-        
+
         String fundsText;
 
         if (!plugin.walletOn(player) || !player.hasPermission("spoutwallet.use")) {
