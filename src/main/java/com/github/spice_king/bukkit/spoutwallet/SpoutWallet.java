@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with SpoutWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.github.spice_king.bukkit.spoutwallet;
 
 import com.github.spice_king.bukkit.spoutwallet.listeners.SpoutCraftListener;
@@ -39,31 +38,22 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 public class SpoutWallet extends JavaPlugin {
     
     public static Economy economy = null;
-    
     private Set<SpoutPlayer> wallets;
-    
     public String fundsString;
     public Integer updateSpeed;
     public Integer ySetting;
     public Integer xSetting;
-    
     public Integer colorFundsRed;
     public Integer colorFundsBlue;
     public Integer colorFundsGreen;
-        
     public Integer colorRankRed;
     public Integer colorRankBlue;
     public Integer colorRankGreen;
-    
     public Color colorFunds;
     public Color colorRank;
-
     public WidgetAnchor location;
-    
     public PluginManager pluginManager = null;
-    
     HashMap fundsLabels = new HashMap();
-    
     SpoutCraftListener spoutCraftListener = new SpoutCraftListener(this);
     
     @Override
@@ -79,7 +69,7 @@ public class SpoutWallet extends JavaPlugin {
         }
         System.out.println(this + " is now disabled!");
     }
-
+    
     @Override
     public void onEnable() {
         // Empty HashMap and HashSet
@@ -91,7 +81,7 @@ public class SpoutWallet extends JavaPlugin {
         ySetting = getConfig().getInt("yOffset");
         xSetting = getConfig().getInt("xOffset");
         
-        if (updateSpeed < 20){
+        if (updateSpeed < 20) {
             updateSpeed = 20;
             getConfig().set("UpdateSpeed", updateSpeed);
         }
@@ -100,39 +90,38 @@ public class SpoutWallet extends JavaPlugin {
         colorFundsBlue = getConfig().getInt("color.funds.blue");
         colorFundsGreen = getConfig().getInt("color.funds.green");
         
-        if ((colorFundsRed > 255) || (colorFundsRed <= -1)){
+        if ((colorFundsRed > 255) || (colorFundsRed <= -1)) {
             colorFundsRed = 255;
             getConfig().set("color.funds.red", colorFundsRed);
         }
-        if ((colorFundsBlue > 255) || (colorFundsBlue <= -1)){
+        if ((colorFundsBlue > 255) || (colorFundsBlue <= -1)) {
             colorFundsBlue = 255;
             getConfig().set("color.funds.blue", colorFundsBlue);
         }
-        if ((colorFundsGreen > 255) || (colorFundsGreen <= -1)){
+        if ((colorFundsGreen > 255) || (colorFundsGreen <= -1)) {
             colorFundsGreen = 255;
             getConfig().set("color.funds.green", colorFundsGreen);
         }
         try {
             location = Enum.valueOf(WidgetAnchor.class, getConfig().getString("location", "TOP_LEFT").toUpperCase(Locale.ENGLISH));
-        }
-        catch (java.lang.IllegalArgumentException e){
+        } catch (java.lang.IllegalArgumentException e) {
             System.out.print("[SpoutWallet] Oops, the location you want to start from is not a location Spout knows about.");
             System.out.print("[SpoutWallet] I'm going to change it back to TOP_LEFT");
             getConfig().set("location", "TOP_LEFT");
             try {
-                    location = WidgetAnchor.TOP_LEFT;
-            } catch (java.lang.IllegalArgumentException a){
-                    System.err.print("[SpoutWallet] Uh oh, Spout broke something! Tell Spice_King that WidgetAnchor enum has changed!");
+                location = WidgetAnchor.TOP_LEFT;
+            } catch (java.lang.IllegalArgumentException a) {
+                System.err.print("[SpoutWallet] Uh oh, Spout broke something! Tell Spice_King that WidgetAnchor enum has changed!");
             }
         }
         this.saveConfig(); //Save the config!
         // make the colors
-        colorFunds = new Color(new Float(colorFundsRed)/255, new Float(colorFundsGreen)/255, new Float(colorFundsBlue)/255);
+        colorFunds = new Color(new Float(colorFundsRed) / 255, new Float(colorFundsGreen) / 255, new Float(colorFundsBlue) / 255);
         
         Logger log = getServer().getLogger();
         getServer().getPluginManager().registerEvents(spoutCraftListener, this);
         SetupScheduledTasks();
-        if (setupEconomy()){
+        if (setupEconomy()) {
             System.out.print("[SpoutWallet] Hooked Vault!");
         } else {
             System.out.print("[SpoutWallet] Oh this is bad. Vault has no economy for me!");
@@ -144,11 +133,11 @@ public class SpoutWallet extends JavaPlugin {
                 }
                 
                 if (cs instanceof Player) {
-                    SpoutPlayer sPlayer = (SpoutPlayer)cs;
-                    if (!cs.hasPermission("spoutwallet.toggle")){
+                    SpoutPlayer sPlayer = (SpoutPlayer) cs;
+                    if (!cs.hasPermission("spoutwallet.toggle")) {
                         cs.sendMessage(ChatColor.RED + "You can't use this!");
                     } else {
-                        if (sPlayer.isSpoutCraftEnabled()){
+                        if (sPlayer.isSpoutCraftEnabled()) {
                             setWallet(sPlayer, !walletOn(sPlayer));
                         } else {
                             cs.sendMessage(ChatColor.RED + "You don't have SpoutCraft, so you can't use this command!");
@@ -177,7 +166,7 @@ public class SpoutWallet extends JavaPlugin {
         }
     }
     
-    public HashMap getFundsLabels(){
+    public HashMap getFundsLabels() {
         return fundsLabels;
     }
     
@@ -185,11 +174,11 @@ public class SpoutWallet extends JavaPlugin {
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new PlayerUpdateTask(this), 50, 20);
     }
     
-    public void RemoveScheduledTasks(){
+    public void RemoveScheduledTasks() {
         getServer().getScheduler().cancelTasks(this);
     }
     
-    private Boolean setupEconomy(){
+    private Boolean setupEconomy() {
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null) {
             economy = economyProvider.getProvider();
@@ -197,6 +186,4 @@ public class SpoutWallet extends JavaPlugin {
         
         return (economy != null);
     }
-    
-
 }
