@@ -14,70 +14,63 @@
  * You should have received a copy of the GNU General Public License
  * along with SpoutWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.github.spice_king.bukkit.spoutwallet.listeners;
 
-import java.util.HashMap;
 import com.github.spice_king.bukkit.spoutwallet.SpoutWallet;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
-import org.getspout.spoutapi.gui.GenericLabel;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 /**
  *
  * @author Kyle
  */
-
 public class SpoutCraftListener implements Listener {
-    
+
     SpoutWallet plugin;
-    
+
     public SpoutCraftListener(SpoutWallet plugin) {
         this.plugin = plugin;
         //Position offset for the new anchor system
         /*switch(plugin.location) {
-            case TOP_LEFT:
-            case TOP_CENTER:
-            case TOP_RIGHT:
-                fundsY = plugin.ySetting;
-                rankY = plugin.ySetting + 10;
-                break;
-            case CENTER_LEFT:
-            case CENTER_CENTER:
-            case CENTER_RIGHT:
-                fundsY = plugin.ySetting - 5;
-                rankY = plugin.ySetting + 5;
-                break;
-            case BOTTOM_LEFT:
-            case BOTTOM_CENTER:
-            case BOTTOM_RIGHT:
-                fundsY = plugin.ySetting - 10;
-                rankY = plugin.ySetting;
-                break;
-            default:
-                System.out.print("[SpoutWallet] Somehow, I can't see the offset needed!");
-                try {
-                    plugin.location = WidgetAnchor.TOP_LEFT;
-                } catch (java.lang.IllegalArgumentException e){
-                    System.err.print("[SpoutWallet] Uh oh, Spout broke something! Tell Spice_King that WidgetAnchor enum has changed!");
-                }
-                break;
-        }*/
+         case TOP_LEFT:
+         case TOP_CENTER:
+         case TOP_RIGHT:
+         fundsY = plugin.ySetting;
+         rankY = plugin.ySetting + 10;
+         break;
+         case CENTER_LEFT:
+         case CENTER_CENTER:
+         case CENTER_RIGHT:
+         fundsY = plugin.ySetting - 5;
+         rankY = plugin.ySetting + 5;
+         break;
+         case BOTTOM_LEFT:
+         case BOTTOM_CENTER:
+         case BOTTOM_RIGHT:
+         fundsY = plugin.ySetting - 10;
+         rankY = plugin.ySetting;
+         break;
+         default:
+         System.out.print("[SpoutWallet] Somehow, I can't see the offset needed!");
+         try {
+         plugin.location = WidgetAnchor.TOP_LEFT;
+         } catch (java.lang.IllegalArgumentException e){
+         System.err.print("[SpoutWallet] Uh oh, Spout broke something! Tell Spice_King that WidgetAnchor enum has changed!");
+         }
+         break;
+         }*/
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void spoutEnable(SpoutCraftEnableEvent event) {
-        
+
         // Should not happen
-        if(!event.getPlayer().isSpoutCraftEnabled()) {
+        if (!event.getPlayer().isSpoutCraftEnabled()) {
             event.getPlayer().sendMessage("This server uses SpoutCraft to display your balance.");
             event.getPlayer().sendMessage("Install SpoutCraft from http://goo.gl/UbjS1 to see it.");
-            return;
         }
-        plugin.drawGUI(event.getPlayer(), event.getPlayer().getMainScreen());
+        //plugin.drawGUI(event.getPlayer(), event.getPlayer().getMainScreen());
     }
-
 }
