@@ -20,8 +20,8 @@ import com.github.spice_king.bukkit.spoutwallet.listeners.SpoutCraftListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -36,7 +36,7 @@ import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class SpoutWallet extends JavaPlugin {
-    
+
     public static Economy economy = null;
     private Set<SpoutPlayer> wallets;
     public String fundsString;
@@ -46,16 +46,12 @@ public class SpoutWallet extends JavaPlugin {
     public Integer colorFundsRed;
     public Integer colorFundsBlue;
     public Integer colorFundsGreen;
-    public Integer colorRankRed;
-    public Integer colorRankBlue;
-    public Integer colorRankGreen;
     public Color colorFunds;
-    public Color colorRank;
     public WidgetAnchor location;
     public PluginManager pluginManager = null;
-    HashMap fundsLabels = new HashMap();
     SpoutCraftListener spoutCraftListener = new SpoutCraftListener(this);
-    
+    Map<String, Integer> tasks;
+
     @Override
     public void onDisable() {
         pluginManager = null;
@@ -69,18 +65,94 @@ public class SpoutWallet extends JavaPlugin {
         }
         System.out.println(this + " is now disabled!");
     }
-    
+
     @Override
     public void onEnable() {
         // Empty HashMap and HashSet
-        fundsLabels = new HashMap();
         wallets = new HashSet<SpoutPlayer>();
+        tasks = new HashMap<String, Integer>();
+
+        loadConfig();
+        getServer().getPluginManager().registerEvents(spoutCraftListener, this);
+        if (setupEconomy()) {
+            System.out.print("[SpoutWallet] Hooked Vault!");
+        } else {
+            System.out.print("[SpoutWallet] Oh this is bad. Vault has no economy for me!");
+        }
+        getCommand("wallet").setExecutor(new CommandExecutor() {
+            public boolean onCommand(CommandSender cs, Command cmnd, String alias, String[] args) {
+                if (args.length > 0) {
+                    return false;
+                }
+
+                if (cs instanceof Player) {
+                    SpoutPlayer sPlayer = (SpoutPlayer) cs;
+                    if (!cs.hasPermission("spoutwallet.toggle")) {
+                        cs.sendMessage(ChatColor.RED + "You can't use this!");
+                    } else {
+                        if (sPlayer.isSpoutCraftEnabled()) {
+                            setWallet(sPlayer, !walletOn(sPlayer));
+                        } else {
+                            cs.sendMessage(ChatColor.RED + "You don't have SpoutCraft, so you can't use this command!");
+                            cs.sendMessage(ChatColor.RED + "Install SpoutCraft from http://get.spout.org");
+                        }
+                    }
+                } else {
+                    cs.sendMessage(ChatColor.RED + "You seem to be lacking a body to hold a wallet, so I can't tell you how full it is.");
+                }
+
+                return true;
+            }
+        });
+        System.out.println("[SpoutWallet] is now enabled!");
+    }
+
+    public boolean walletOn(SpoutPlayer sPlayer) {
+        return wallets.contains(sPlayer);
+    }
+
+    public void setWallet(SpoutPlayer sPlayer, boolean enabled) {
+        if (enabled) {
+            wallets.add(sPlayer);
+        } else {
+            wallets.remove(sPlayer);
+        }
+    }
+
+    public int SetupScheduledTask(PlayerUpdateTask task) {
+        return getServer().getScheduler().scheduleSyncRepeatingTask(this, task, 50, 20);
+    }
+
+    public void RemoveScheduledTasks() {
+        getServer().getScheduler().cancelTasks(this);
+    }
+
+    private Boolean setupEconomy() {
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        if (economyProvider != null) {
+            economy = economyProvider.getProvider();
+        }
+
+        return (economy != null);
+    }
+
+    public void addPlayerUpdateTask(String name, PlayerUpdateTask task) {
+        int taskID = SetupScheduledTask(task);
+        tasks.put(name, taskID);
+    }
+    
+    public void removePlayerUpdateTask(String name){
+        int taskID = tasks.get(name);
+        getServer().getScheduler().cancelTask(taskID);
+    }
+
+    private void loadConfig() {
         getConfig().options().copyDefaults(true);
         fundsString = getConfig().getString("Funds"); //String test = String.format("test goes here %s more text", "Testing");
         updateSpeed = getConfig().getInt("UpdateSpeed");
         ySetting = getConfig().getInt("yOffset");
         xSetting = getConfig().getInt("xOffset");
-        
+
         if (updateSpeed < 20) {
             updateSpeed = 20;
             getConfig().set("UpdateSpeed", updateSpeed);
@@ -89,7 +161,7 @@ public class SpoutWallet extends JavaPlugin {
         colorFundsRed = getConfig().getInt("color.funds.red");
         colorFundsBlue = getConfig().getInt("color.funds.blue");
         colorFundsGreen = getConfig().getInt("color.funds.green");
-        
+
         if ((colorFundsRed > 255) || (colorFundsRed <= -1)) {
             colorFundsRed = 255;
             getConfig().set("color.funds.red", colorFundsRed);
@@ -115,75 +187,7 @@ public class SpoutWallet extends JavaPlugin {
             }
         }
         this.saveConfig(); //Save the config!
-        // make the colors
+        // make the color
         colorFunds = new Color(new Float(colorFundsRed) / 255, new Float(colorFundsGreen) / 255, new Float(colorFundsBlue) / 255);
-        
-        Logger log = getServer().getLogger();
-        getServer().getPluginManager().registerEvents(spoutCraftListener, this);
-        SetupScheduledTasks();
-        if (setupEconomy()) {
-            System.out.print("[SpoutWallet] Hooked Vault!");
-        } else {
-            System.out.print("[SpoutWallet] Oh this is bad. Vault has no economy for me!");
-        }
-        getCommand("wallet").setExecutor(new CommandExecutor() {
-            public boolean onCommand(CommandSender cs, Command cmnd, String alias, String[] args) {
-                if (args.length > 0) {
-                    return false;
-                }
-                
-                if (cs instanceof Player) {
-                    SpoutPlayer sPlayer = (SpoutPlayer) cs;
-                    if (!cs.hasPermission("spoutwallet.toggle")) {
-                        cs.sendMessage(ChatColor.RED + "You can't use this!");
-                    } else {
-                        if (sPlayer.isSpoutCraftEnabled()) {
-                            setWallet(sPlayer, !walletOn(sPlayer));
-                        } else {
-                            cs.sendMessage(ChatColor.RED + "You don't have SpoutCraft, so you can't use this command!");
-                            cs.sendMessage(ChatColor.RED + "Install SpoutCraft from http://goo.gl/UbjS1");
-                        }
-                    }
-                } else {
-                    cs.sendMessage(ChatColor.RED + "You seem to be lacking a body to hold a wallet, so I can't tell you how full it is.");
-                }
-                
-                return true;
-            }
-        });
-        System.out.println("[SpoutWallet] is now enabled!");
-    }
-    
-    public boolean walletOn(SpoutPlayer sPlayer) {
-        return wallets.contains(sPlayer);
-    }
-    
-    public void setWallet(SpoutPlayer sPlayer, boolean enabled) {
-        if (enabled) {
-            wallets.add(sPlayer);
-        } else {
-            wallets.remove(sPlayer);
-        }
-    }
-    
-    public HashMap getFundsLabels() {
-        return fundsLabels;
-    }
-    
-    public void SetupScheduledTasks() {
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, new PlayerUpdateTask(this), 50, 20);
-    }
-    
-    public void RemoveScheduledTasks() {
-        getServer().getScheduler().cancelTasks(this);
-    }
-    
-    private Boolean setupEconomy() {
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
-            economy = economyProvider.getProvider();
-        }
-        
-        return (economy != null);
     }
 }

@@ -16,28 +16,14 @@
  */
 package com.github.spice_king.bukkit.spoutwallet.listeners;
 
-import com.github.spice_king.bukkit.spoutwallet.PlayerUpdateTask;
-import com.github.spice_king.bukkit.spoutwallet.SpoutWallet;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.getspout.spoutapi.event.spout.SpoutCraftEnableEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-/**
- *
- * @author Kyle
- */
-public class SpoutCraftListener implements Listener {
-
-    SpoutWallet plugin;
-
-    public SpoutCraftListener(SpoutWallet plugin) {
-        this.plugin = plugin;
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void spoutEnable(SpoutCraftEnableEvent event) {
-        PlayerUpdateTask task = new PlayerUpdateTask(plugin, event.getPlayer());
-        plugin.addPlayerUpdateTask(event.getPlayer().getName(), task);
+public class PlayerQuitListener implements Listener{
+    @EventHandler(priority=EventPriority.MONITOR)
+    void onPlayerQuit(PlayerQuitEvent event){
+        
     }
 }
