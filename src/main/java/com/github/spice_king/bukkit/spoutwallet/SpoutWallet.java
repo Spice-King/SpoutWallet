@@ -75,10 +75,10 @@ public class SpoutWallet extends JavaPlugin {
         tasks = new HashMap<String, Integer>();
 
         loadConfig();
-        
+
         spoutCraftListener = new SpoutCraftListener(this);
         playerQuitListener = new PlayerQuitListener(this);
-        
+
         getServer().getPluginManager().registerEvents(spoutCraftListener, this);
         getServer().getPluginManager().registerEvents(playerQuitListener, this);
         if (setupEconomy()) {
@@ -146,8 +146,8 @@ public class SpoutWallet extends JavaPlugin {
         int taskID = SetupScheduledTask(task);
         tasks.put(name, taskID);
     }
-    
-    public void removePlayerUpdateTask(String name){
+
+    public void removePlayerUpdateTask(String name) {
         int taskID = tasks.get(name);
         getServer().getScheduler().cancelTask(taskID);
     }
