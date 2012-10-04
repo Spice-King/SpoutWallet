@@ -148,8 +148,15 @@ public class SpoutWallet extends JavaPlugin {
     }
 
     public void removePlayerUpdateTask(String name) {
-        int taskID = tasks.get(name);
-        getServer().getScheduler().cancelTask(taskID);
+        Integer taskID = null;
+        try {
+            taskID = tasks.get(name);
+        } catch (NullPointerException e) {
+            //Eat the NPE, I don't care!
+        }
+        if (taskID != null) {
+            getServer().getScheduler().cancelTask(taskID);
+        }
     }
 
     private void loadConfig() {
